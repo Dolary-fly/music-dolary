@@ -21,6 +21,16 @@ Vue.filter("dateFormat", function (date) {
   return createDate;
 })
 
+//定义一个将秒数转化为分钟：秒数的全局过滤器
+Vue.filter("timeFormat", function (time) {
+  var minute = parseInt(time / 60);
+  var second = time % 60;
+  second = Math.round(second);
+  var minutestr = ('' + minute).padStart(2, '0');
+  var secondstr = ('' + second).padStart(2, '0');
+  return minutestr + ':' + secondstr;
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

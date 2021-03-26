@@ -99,6 +99,8 @@ export default {
           console.log(this.queryIds);
           this.getSongsDetail();
           this.loading = false;
+          //将所有的歌曲id传递给Main组件
+          // this.$emit("setSongsId",this.SongsIds);
         })
         .catch(err => {
           console.log(err);
@@ -128,7 +130,9 @@ export default {
     // 点击播放歌曲
     clickToPlay(row) {
       console.log("点击成功");
-      this.$emit("setSongListInfo", this.songsIds, row.id);
+      //传递所点击歌曲的id
+      var songsIds = this.songsIds;
+      this.$emit("setSongListInfo", songsIds, row.id);
     }
   }
 };
@@ -137,7 +141,7 @@ export default {
 .playlisthead {
   width: 1000px;
   height: 300px;
-  background: lightcoral;
+  /* background: lightcoral; */
   padding: 20px;
 }
 /* 歌单封面图片 */

@@ -31,7 +31,7 @@
       </div>
       <!-- 右边内容栏 -->
       <div class="songlistdetail">
-        <router-view />
+        <router-view v-on="$listeners"></router-view>
       </div>
     </div>
   </div>

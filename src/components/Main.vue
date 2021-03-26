@@ -19,8 +19,7 @@
       <!-- <el-aside width="200px">Aside</el-aside> -->
       <el-container>
         <el-main class="maincontain">
-          <button @click="test">test</button>
-          <router-view :message="message" :curId="curId" @setSongListInfo="setSongListInfo"></router-view>
+          <router-view :curId="curId" @setSongListInfo="setSongListInfo"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -36,7 +35,7 @@
       </div>-->
       <!-- 自定义audio -->
       <!-- <p>{{message}}</p> -->
-      <PlayBar></PlayBar>
+      <PlayBar :songid="this.curId" :songsIds="this.songIds"></PlayBar>
     </el-footer>
 
     <el-dialog title="提示" :visible.sync="loginDialog">
@@ -72,7 +71,7 @@ export default {
         window.localStorage.getItem("currentuser") === "null"
           ? null
           : JSON.parse(window.localStorage.getItem("currentuser")),
-      message: [],
+      songIds: [], //所有歌曲的id
       curId: ""
     };
   },
@@ -126,13 +125,20 @@ export default {
           return this.$message("请求失败");
         });
     },
-    async setSongListInfo(songIds, curId) {
-      console.log(songIds, curId);
-      this.message = songIds;
+    setSongListInfo(songIds, curId) {
+      //this.message = songIds;
       // console.log(this.message);
+      //传入的歌曲的id
+      //console.log("传来的歌曲ids", songIds);
+      //console.log("传来的具体歌曲的id", curId);
+      this.songIds = songIds;
+      this.curId = curId;
+      this.setAudioSrc();
+      // console.log(this.curId);
     },
-    test() {
-      alert(this.message);
+    //利用歌曲id获取歌曲url并赋值给audio
+    setAudioSrc() {
+      this.$axios.get("");
     }
   }
 };
@@ -171,7 +177,7 @@ body {
 }
 
 .el-main {
-  background-color: #e9eef3;
+  /* background-color: #e9eef3; */
   color: #333;
   text-align: center;
 }
