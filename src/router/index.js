@@ -39,7 +39,7 @@ export default new Router({
             component: SingerList
           },
           {
-            path: '/newdisk',
+            path: '/newdisk/:id',
             component: NewDisk
           }
         ]

@@ -13,7 +13,7 @@
     <el-row :gutter="10">
       <el-col :span="3" v-for="(item,index) in songlistArr" :key="index">
         <el-card :body-style="{ padding: '0px' }">
-          <img :src="item.picUrl" class="image" />
+          <img :src="item.picUrl" class="image" @click="toSonglistPage(item.id)" />
           <div>
             <div class="bottom">
               <a class="iconcount"></a>
@@ -35,7 +35,7 @@
         <ul v-for="(citem,cindex) in newdisk[index]" :key="cindex" class="newsongul">
           <li class="newsongli">
             <div>
-              <img :src="citem.picUrl" />
+              <img :src="citem.picUrl" @click="toAlbumPage(citem.id)" />
               <p>{{citem.name}}</p>
               <p>{{citem.artist.name}}</p>
             </div>
@@ -203,6 +203,14 @@ export default {
           this.newsongs = response.data.list[1].tracks;
           this.originallist = response.data.list[2].tracks;
         });
+    },
+    //跳转到歌单页面
+    toSonglistPage(id) {
+      this.$router.push("/songlist/" + id);
+    },
+    //跳转到专辑页面
+    toAlbumPage(id) {
+      this.$router.push("/newdisk/" + id);
     }
   }
 };
