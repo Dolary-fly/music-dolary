@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mainDiv">
     <!-- <div>这是新碟详情页面，和歌单详情类似</div> -->
     <!-- <p>{{currentSonglistId}}</p> -->
     <!-- 歌单头 -->
@@ -20,9 +20,9 @@
           <span>{{playlistDetail.createTime|dateFormat}}</span>
         </div>-->
         <div>
-          <p>歌手：{{albumListDetail.artists[0].name}}</p>
-          <p>发行时间：{{albumListDetail.publishTime|dateFormat}}</p>
-          <p>发行公司：{{albumListDetail.company}}</p>
+          <!-- <p>歌手：{{albumListDetail.artists[0].name}}</p> -->
+          <div class="albumTAC">发行时间：{{albumListDetail.publishTime|dateFormat}}</div>
+          <div class="albumTAC">发行公司：{{albumListDetail.company}}</div>
         </div>
         <div class="headbtn">
           <a class="headbutton">播放</a>
@@ -33,30 +33,29 @@
         </div>
       </div>
     </div>
-    <div>
-      <p>
-        <b>专辑介绍：</b>
-        <br />
-        {{albumDetail.description}}
-      </p>
+    <div class="albumIntro">
+      <div>
+        <b>专辑介绍</b>
+      </div>
+      <p class="albumDescription">{{albumListDetail.description}}</p>
     </div>
     <!-- 歌曲内容列表 -->
-    <!-- <div class="listdetailhead">
+    <div class="listdetailhead">
       <div class="songdetailinfo">
-        <h3>歌曲列表</h3>
-        <span>{{playlistDetail.trackCount}}首歌</span>
+        <h3>播放歌曲列表</h3>
+        <span>{{albumListDetail.size}}首歌</span>
       </div>
 
-      <span>播放：{{playlistDetail.playCount}}次</span>
-    </div>-->
+      <!-- <span>播放：{{playlistDetail.playCount}}次</span> -->
+    </div>
     <!-- 点击播放歌曲 -->
-    <!-- <el-table :data="songslist" stripe style="width: 100%" @row-click="clickToPlay">
+    <el-table :data="songsListDetail" stripe style="width: 100%">
       <el-table-column label="序号" width="100" type="index"></el-table-column>
-      <el-table-column prop="name" label="标题" width="200"></el-table-column>
+      <el-table-column prop="name" label="标题" width="400"></el-table-column>
       <el-table-column prop="dt" label="时长" width="180"></el-table-column>
       <el-table-column prop="ar[0].name" label="歌手" width="180"></el-table-column>
-      <el-table-column prop="al.name" label="专辑"></el-table-column>
-    </el-table>-->
+      <!-- <el-table-column prop="al.name" label="专辑"></el-table-column> -->
+    </el-table>
   </div>
 </template>
 
@@ -69,9 +68,10 @@ export default {
         : window.localStorage.getItem("currentId"),
       // playlistDetail: {},
       albumListDetail: {}, //专辑详细数据
-      loading: false,
+      songsListDetail: [], //专辑歌曲详细数据
+      //loading: false,
       queryIds: "",
-      songslist: [],
+
       //传给父组件的具体的行
       rowid: "",
       //歌单中所有歌曲的id
@@ -90,7 +90,12 @@ export default {
   created() {
     // this.getSongList(); //获取歌单详细信息
     // this.getSongsDetail(); //获取完整的歌曲信息
+    console.log("专辑id create阶段", this.currentAlbumId);
     this.getAlbumDetail();
+    console.log("create阶段", this.albumListDetail);
+  },
+  mounted() {
+    console.log("组件挂载阶段", this.albumListDetail);
   },
   methods: {
     getAlbumDetail() {
@@ -101,8 +106,20 @@ export default {
           }
         })
         .then(res => {
-          console.log("专辑详细信息", res.data.album);
+          // console.log("专辑详细信息", res.data.album);
           this.albumListDetail = res.data.album;
+          this.songsListDetail = res.data.songs;
+          this.songsListDetail.forEach(item => {
+            let dt = new Date(item.dt);
+            let mm = (dt.getMinutes() + "").padStart(2, "0");
+            let ss = (dt.getSeconds() + "").padStart(2, "0");
+            item.dt = mm + ":" + ss;
+            if (item.alia.length != 0) {
+              item.name = item.name + "-" + item.alia[0];
+            }
+          });
+          // console.log("图片url", this.albumListDetail.picUrl);
+          //this.loading = true;
         })
         .catch(err => {
           console.log(err);
@@ -169,9 +186,13 @@ export default {
 };
 </script>
 <style>
+.mainDiv {
+  width: 1000px;
+  margin: 0 auto;
+}
 .playlisthead {
   width: 1000px;
-  height: 300px;
+  height: 200px;
   /* background: lightcoral; */
   padding: 20px;
 }
@@ -266,4 +287,20 @@ export default {
 .songdetailinfo span {
   margin-left: 40px;
 }
+/* 专辑介绍 */
+.albumIntro {
+  padding: 20px;
+  text-align: left;
+}
+.albumTAC {
+  text-align: left;
+  margin-left: 50px;
+  padding: 5px;
+}
+/* .albumDescription {
+  overflow: hidden;
+  word-break: keep-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+} */
 </style>
